@@ -986,31 +986,6 @@ function restartAssessment() {
 // INIT
 // ─────────────────────────────────────────────
 buildQuestions();
-
-// ─────────────────────────────────────────────
-// TEST HELPER — auto-fill all questions randomly
-// Remove or comment out before deploying
-// ─────────────────────────────────────────────
-function autoFill() {
-  for (let i = 0; i < 150; i++) {
-    const val = Math.floor(Math.random() * 5); // 0–4
-    const radio = document.querySelector('input[name="q' + i + '"][value="' + val + '"]');
-    if (radio) {
-      radio.checked = true;
-      radio.dispatchEvent(new Event('change'));
-    }
-  }
-  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-}
-
-// Inject a visible test button into the page
-(function() {
-  const btn = document.createElement('button');
-  btn.textContent = '⚡ Auto-fill for testing';
-  btn.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:#b8935a;color:white;border:none;padding:0.6rem 1.2rem;border-radius:2px;font-size:0.8rem;font-weight:500;cursor:pointer;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
-  btn.onclick = autoFill;
-  document.body.appendChild(btn);
-})();
 </script>
 </body>
 </html>
