@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spiritual Gifts Inventory</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1814;
+    --ink-mid: #4a4540;
+    --ink-light: #8a8480;
+    --cream: #f7f4ef;
+    --cream-dark: #ede9e2;
+    --gold: #b8935a;
+    --gold-light: #d4b483;
+    --rule: #d8d2c8;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .site-header::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 1.5rem;
+  }
+  .site-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .site-header h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .site-header p {
+    margin-top: 1rem;
+    color: var(--ink-mid);
+    font-size: 0.875rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Instructions ── */
+  .instructions {
+    max-width: 680px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+  .instructions p {
+    color: var(--ink-mid);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .scale-legend {
+    display: flex;
+    gap: 0;
+    margin: 2rem 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .scale-legend-item {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    border-right: 1px solid var(--rule);
+    background: white;
+  }
+  .scale-legend-item:last-child { border-right: none; }
+  .scale-legend-item .num {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gold);
+    display: block;
+  }
+  .scale-legend-item .label {
+    font-size: 0.7rem;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* ── Progress ── */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ── Questions ── */
+  .questions-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+  }
+
+  .question-block {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+    transition: background 0.15s;
+  }
+  .question-block:hover { background: rgba(184,147,90,0.03); }
+  .question-block.answered .q-num { color: var(--gold); }
+
+  .q-num {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    color: var(--ink-light);
+    min-width: 2.2rem;
+    padding-top: 2px;
+    transition: color 0.2s;
+    text-align: right;
+  }
+
+  .q-body { flex: 1; }
+
+  .q-text {
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    line-height: 1.65;
+    margin-bottom: 1rem;
+  }
+
+  .q-options {
+    display: flex;
+    gap: 4px;
+  }
+
+  .q-options label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    min-width: 56px;
+  }
+  .q-options input[type="radio"] { display: none; }
+  .q-options .pip {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rule);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--ink-light);
+    transition: all 0.15s;
+  }
+  .q-options label:hover .pip {
+    border-color: var(--gold-light);
+    color: var(--gold);
+  }
+  .q-options input[type="radio"]:checked + .pip {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: white;
+  }
+  .pip-label {
+    font-size: 0.62rem;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-align: center;
+    max-width: 56px;
+    line-height: 1.2;
+  }
+
+  /* ── Submit area ── */
+  .submit-area {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 2rem 6rem;
+    text-align: center;
+  }
+  .submit-note {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    margin-bottom: 1.5rem;
+  }
+  .unanswered-warning {
+    font-size: 0.85rem;
+    color: #c0392b;
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .btn-submit {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    padding: 1rem 3rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--gold); }
+  .btn-submit:disabled { background: var(--rule); cursor: not-allowed; }
+
+  /* ── Results ── */
+  #results-section {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+    animation: fadeIn 0.6s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .results-header::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 1.5rem;
+  }
+  .results-header h2 {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  .results-header p {
+    color: var(--ink-mid);
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .gift-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .gift-rank {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--ink-light);
+    min-width: 1.8rem;
+    text-align: right;
+  }
+  .gift-name {
+    min-width: 180px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .gift-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .gift-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .gift-score {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    color: var(--ink-mid);
+    min-width: 2.5rem;
+    text-align: right;
+  }
+
+  .top-gifts {
+    margin: 3rem 0;
+  }
+  .top-gifts h3 {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .top-gift-card {
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+    margin-bottom: 1rem;
+    border-radius: 2px;
+  }
+  .top-gift-card h4 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .top-gift-card .score-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-light);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+  }
+  .top-gift-card p {
+    font-size: 0.875rem;
+    color: var(--ink-mid);
+    line-height: 1.7;
+  }
+  .top-gift-card .scripture {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  /* ── Email handoff ── */
+  .email-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+  .email-section h3 {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .email-section p {
+    font-size: 0.875rem;
+    color: var(--ink-mid);
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+  }
+  .email-section input[type="text"],
+  .email-section input[type="email"] {
+    width: 100%;
+    padding: 0.65rem 0.875rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    background: var(--cream);
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .email-section input:focus { border-color: var(--gold); }
+  .btn-send {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+    margin-right: 0.75rem;
+  }
+  .btn-send:hover { background: var(--ink); }
+  .btn-restart {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--ink-light);
+    background: none;
+    border: 1px solid var(--rule);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .btn-restart:hover { border-color: var(--ink-mid); color: var(--ink); }
+
+  .form-url-note {
+    margin-top: 1rem;
+    font-size: 0.775rem;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  @media (max-width: 560px) {
+    .q-options .pip { width: 32px; height: 32px; font-size: 0.9rem; }
+    .gift-name { min-width: 130px; font-size: 0.8rem; }
+    .scale-legend-item .label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Spiritual Gifts <em>Inventory</em></h1>
+  <p>Carraway · 150-Question Self-Assessment</p>
+</header>
+
+<section class="instructions">
+  <p>This inventory is designed to help you identify your spiritual gifts based on your past experiences and inward motivations. Answer honestly — not based on how you feel you <em>should</em> answer, but on what has actually been true of your life.</p>
+  <p>For each of the 150 statements, select the number that best describes how true it is for you.</p>
+  <div class="scale-legend">
+    <div class="scale-legend-item"><span class="num">0</span><span class="label">Never</span></div>
+    <div class="scale-legend-item"><span class="num">1</span><span class="label">Rarely</span></div>
+    <div class="scale-legend-item"><span class="num">2</span><span class="label">Sometimes</span></div>
+    <div class="scale-legend-item"><span class="num">3</span><span class="label">Usually</span></div>
+    <div class="scale-legend-item"><span class="num">4</span><span class="label">Almost always</span></div>
+  </div>
+</section>
+
+<div class="progress-bar-wrap" id="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-label" id="progress-label">0 / 150</div>
+</div>
+
+<form id="assessment-form">
+  <div class="questions-wrap" id="questions-wrap">
+    <!-- Questions injected by JS -->
+  </div>
+
+  <div class="submit-area">
+    <p class="submit-note">All 150 questions must be answered before scoring.</p>
+    <p class="unanswered-warning" id="unanswered-warning"></p>
+    <button type="button" class="btn-submit" id="btn-submit" onclick="submitAssessment()">Score my inventory</button>
+  </div>
+</form>
+
+<section id="results-section">
+  <div class="results-header">
+    <h2>Your Gifts Profile</h2>
+    <p>Scores reflect the sum of your five responses per gift (max 20).</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.25rem;">
+      <span style="font-size:0.775rem;color:var(--ink-mid);"><span style="color:var(--gold);font-weight:500;">15–20</span>&nbsp; Probably one of your gifts</span>
+      <span style="font-size:0.775rem;color:var(--ink-light);">·</span>
+      <span style="font-size:0.775rem;color:var(--ink-mid);"><span style="color:var(--gold);font-weight:500;">12–14</span>&nbsp; Possible gift; seek confirmation</span>
+      <span style="font-size:0.775rem;color:var(--ink-light);">·</span>
+      <span style="font-size:0.775rem;color:var(--ink-mid);"><span style="color:var(--gold);font-weight:500;">0–11</span>&nbsp; Probably not one of your gifts</span>
+    </div>
+  </div>
+
+  <div class="top-gifts" id="top-gifts">
+    <!-- Top gift cards injected -->
+  </div>
+
+  <div id="full-rankings">
+    <!-- All 30 gift bars injected -->
+  </div>
+
+  <div class="email-section">
+    <h3>Save your results</h3>
+    <p>Enter your name and email address below. You'll be taken to a short form to confirm and submit — your results will be emailed to you automatically.</p>
+    <input type="text" id="result-name" placeholder="Your name" />
+    <input type="email" id="result-email" placeholder="Your email address" />
+    <div style="margin-top: 0.25rem;">
+      <button class="btn-send" onclick="sendResults()">Send results to my email</button>
+      <button class="btn-restart" onclick="restartAssessment()">Start over</button>
+    </div>
+    <p class="form-url-note" id="form-url-note"></p>
+  </div>
+</section>
+
+<script>
+// ─────────────────────────────────────────────
+// QUESTION DATA
+// ─────────────────────────────────────────────
+const QUESTIONS = [
+  "I have an instinct for knowing the best way to accomplish a given project and I have been used by God to create a step-by-step plan for accomplishing a task.",
+  "I have a strong love for the people of God, both in the local and universal church. I'm willing to make whatever personal sacrifices are necessary to see the church come into the fullness of God's will.",
+  "I enjoy working with my hands to create or design things which bless people spiritually.",
+  "I have been used by the Lord to cast demons out of people.",
+  "I can sense much about the spiritual state and inward motivations of others. My impressions on these things are later proved to be true.",
+  "I engage people in conversation about their need for Christ. Many times I'm able to lead those people to accept Jesus as their Lord.",
+  "People often come to me with their problems because I am approachable and they seem to sense that I can be trusted.",
+  "I don't have trouble believing and acting on the promises of God.",
+  "I give more than 10% of my yearly income to the work of the Lord.",
+  "I have prayed for people with sickness or disease and God has healed them.",
+  "I get more fulfillment in helping someone else do something great for God than in my own ministry achievements.",
+  "When guests visit my home I take extra care to make sure they feel welcome and comfortable. I want my home to project a safe and loving environment.",
+  "I have discovered that I pray much more often and intensively than most other Christians that I know.",
+  "While others comment about how strange or confusing their dreams are, I always seem to find a message or a meaning in my dreams.",
+  "When I hear Christians praying in tongues I can discern the general content of the prayers. I know whether it is a prayer of praise, intercession, or spiritual warfare.",
+  "Other Christians have told me that I bring out truths from the Bible that they have never realized before.",
+  "I have an ability to influence others to my way of thinking.",
+  "I have thought about what an honor it would be if I had to die for the Lord Jesus.",
+  "I have a burden for people who are hurting physically or emotionally and I minister the love of God to them.",
+  "God has performed amazing supernatural feats through me.",
+  "I have a special love and concern in my heart for foreign nations and peoples.",
+  "I have a desire to be directly involved in the discipling of other Christians.",
+  "I am persuasive when I speak. When I speak about spiritual things people believe that what I am telling them is of God.",
+  "The Lord often speaks to me through impressions, dreams, or visions.",
+  "I have a heart to meet the practical needs of people that other Christians don't seem to notice.",
+  "I feel I can serve God more wholeheartedly if I am not distracted by lots of material possessions.",
+  "When I teach a lesson from the Bible others respond well and are able to understand and grow spiritually from it.",
+  "I have a desire to speak in tongues so that I may enrich my prayer life.",
+  "I have an ability to see how scriptural principles and teachings can be applied in people's lives today.",
+  "It deeply grieves me when I am in a worship service and I notice that the congregation is unresponsive and is not entering into the presence of God.",
+  "When working on a project, I enjoy the detailed work of creating an overall plan, deciding how to best use our resources, and dividing up responsibilities between group members.",
+  "God has given me translocal authority and influence. Entire groups of churches look to me as a spiritual leader and submit themselves to my counsel and oversight.",
+  "When I build or create things for the church others comment to me about how beautiful or unique my projects are.",
+  "I have ministered to someone who was afflicted by a demonic spirit. They later told me that after I ministered to them they finally felt rid of the spirit and experienced spiritual freedom.",
+  "I can easily distinguish between the Spirit of God and the spirit of the evil one. I can do this with individuals or when I am with a group of people.",
+  "When I meet someone the first thing I think about is whether they have accepted Jesus as their Lord and Savior.",
+  "God uses me to bring encouragement to those who are feeling defeated or distressed.",
+  "Once God gives me an assurance about something I don't waver. I persevere in prayer until it comes to pass.",
+  "I don't mind giving of my time, resources, or money if I know it will bless someone or help them better accomplish their work for the Lord.",
+  "When I pray for people who are afflicted with an illness or disease God gives me supernatural faith to believe that the person will be healed.",
+  "I feel a great sense of accomplishment and fulfillment when I have assisted a brother or sister in Christ in completing a ministry task that God assigned to them.",
+  "I'm usually among the first to approach visitors at my church. I always greet them warmly and help put them at ease.",
+  "When I tell someone, \"I'll be praying for you,\" I pray for that person regularly until I know the situation has been remedied or until I feel God releases me from that burden.",
+  "When people are talking about their dreams in front of me, I can figure out what God is trying to tell them before they can.",
+  "I have been used to give an interpretation of a message in tongues that was given in a corporate church service.",
+  "There are times in my life when God illuminates my understanding of some aspect of His will and I have provided direction by sharing this with other Christians.",
+  "God has put within my heart a desire to lead others into great works for His kingdom.",
+  "When hardship or persecution comes into my life I do not complain or have feelings of resentment toward God.",
+  "When I am in a group, I can intuitively sense if someone is hurting inside, and compassion wells up within me for that person.",
+  "I desire and pray to see God do powerful supernatural acts like He did in the Bible so that the lost world will see His power and be in awe of Him.",
+  "It bothers me deeply that the gospel has not penetrated every nation and people group. I want to help change this.",
+  "God leads me to form lengthy time commitments to other Christians for the purposes of helping them to mature in their walk with God.",
+  "God has spoken to me in a clear manner and directed me to share specific information with another person that ministered to an exact need that they had.",
+  "The Lord reveals things to me about the future that concerns individuals, churches, or even nations.",
+  "When I am at a group function and I notice that something needs to be done, I just do it; no one has to ask me.",
+  "God uses me to minister and meet the needs of people who are poor and/or neglected.",
+  "Other Christians have told me that I have an ability to make the teachings of the Bible clear and interesting.",
+  "I have the ability to pray in tongues and when I do I feel strengthened and renewed spiritually.",
+  "Others tell me that I give wise advice and that they have been greatly helped by the counsel I have given them.",
+  "God seems to touch people in noticeable, visible ways when I sing or lead worship.",
+  "Management comes easy to me. I can put together the right people with the right tasks to see a job completed efficiently.",
+  "The Lord gives me amazing insights into the spiritual forces at work against the church. I use this information to bring both correction and direction to the church so that we will be more effective for God.",
+  "God seems to have given me an ability to create beautiful works that bless other Christians when they see them.",
+  "Demonic spirits have supernaturally revealed themselves to me and harassed me or threatened me.",
+  "My motto is \"everything in the name of Jesus is not necessarily of Jesus.\" I'm cautious about some teachings or spiritual experiences that others have embraced.",
+  "I regularly witness about Christ and give my personal testimony to family members, unsaved friends and co-workers, and even strangers.",
+  "I have a desire to impart faith and hope in other Christians in order to help them understand that God has given them abilities and has a call on their life.",
+  "I have believed God to do something that others thought highly unlikely or even impossible, and then He has done it.",
+  "I find great satisfaction in giving to people in need and knowing that God uses me to be a blessing to others.",
+  "I feel a special compassion for people who are suffering because of a physical infirmity or sickness.",
+  "The Lord lays on my heart specific things to do for others that will ease their burden in their service to God.",
+  "In my church I tend to be among the first to volunteer to open up my home for missionaries or other guests that need a place to stay.",
+  "I have a burden to pray for individuals, situations, or the universal church.",
+  "When I have attempted to give an interpretation to other Christians' dreams, they have excitedly responded that my interpretation was of the Lord and that their spirit bore witness to it.",
+  "In a small-group setting, I have told the group what I felt God was having us pray about when we prayed in tongues. Later other Christians confirmed this and told me that they felt the same thing.",
+  "I seem to be able to discover biblical principles or truths about God that others don't notice or realize.",
+  "God often gives me a vision of what He wants to do in a specific situation, and when I share it with other Christians they get excited and want to be a part of it.",
+  "I feel like the unjust suffering that I have endured in my life has brought me closer to God, so I have thanked Him for it.",
+  "In my church I tend to be among the first to get involved in ministry opportunities directed toward those who are suffering a physical or emotional hardship.",
+  "Powerful supernatural manifestations have occurred in others' lives when I have asked God to intervene on their behalf.",
+  "I can relate well with people of diverse cultures, religions, and worldviews.",
+  "I have noticed that I have a paternal/maternal instinct in regard to other Christians. I want to warn and try to protect them from things that could harm them spiritually.",
+  "I feel a strong anointing on me when I speak or preach to a group about the things of God. Later, others tell me they sensed that anointing as well.",
+  "I regularly receive prophetic revelations from the Lord and when I share them with others they take heed to my message.",
+  "I find great satisfaction in serving the physical or practical needs of others.",
+  "I voluntarily live below my means financially because I would rather use my extra money and resources to help those less fortunate than myself.",
+  "I love to do in-depth studies of the Bible's teachings and then present my findings to others so they will grow in their faith.",
+  "I have noticed that my gift of tongues has developed. I notice new sounds and words and a new intensity when I pray as compared to when I first began to exercise this gift.",
+  "I don't struggle with making difficult decisions. I know which biblical principles to apply to each decision, which ensures that I choose the right course of action.",
+  "After I sing or lead a group in worship, people come to me afterwards and tell me that they sensed the presence of God in a powerful way.",
+  "It really bothers me when I see a church or ministry program that is disorganized and poorly managed. I want to help with the future planning and administration so that it can be successful the next time.",
+  "The Lord Jesus Christ has personally appeared to me and commissioned me as an apostle in His church. (Answer 4 for yes, 0 for no.)",
+  "I tend to be among the first to volunteer in my church for projects that require one to build or decorate something.",
+  "I have a desire to see people freed from demonic strongholds.",
+  "I've learned to trust my intuition and feelings about other people because I am usually right.",
+  "I seem to have an ability to adapt and find common ground with people of different personality types and diverse backgrounds.",
+  "Others have told me that my advice and ministry to them helped them grow in some aspect of their personal or spiritual life.",
+  "It disturbs me when I see Christians living below their privileges in Christ. I want to stir them up to believe God for great things.",
+  "Others describe me as a generous person who always gives to the work of the Lord.",
+  "Others have told me that they have been healed of their affliction after I have prayed for them.",
+  "I have noticed that God will often draw me to particular persons because He wants me to invest myself and my talents in helping them become more of what God wants them to be.",
+  "Other people have commented that I am a very warm or hospitable person.",
+  "I see specific answers to my prayers on a regular basis.",
+  "God speaks to me in dreams or visions and I have come to depend on them as a source of guidance and revelation.",
+  "When I hear an utterance delivered in tongues, I pray that God will grant me the interpretation of that tongue so that the whole congregation can hear the message God has for us.",
+  "The Holy Spirit gives me special insight into the interworking relationships between God, the world, and the church, and I have seen people blessed when I share these insights with them.",
+  "While I was in charge, I have made a tough decision because I thought it was the right course of action. I did this even though I could have made a different decision which would have been more popular with the group.",
+  "I would not be persuaded from ministering long term in an area of the world just because there was a greater chance of being killed there for my faith in Christ.",
+  "When Christians fall into sin, I don't judge them. I would rather comfort and restore them than give them a rebuke.",
+  "I believe that one of the greatest ways that God receives glory and praise is when people see Him perform a miracle.",
+  "When I minister to people outside of my own cultural or ethnic group, they respond favorably to me.",
+  "I am very much a \"people person\" and I love to invest myself in the lives of others.",
+  "God supernaturally reveals the future to me about situations or people that is later proved to be true.",
+  "It deeply grieves me when I see God's laws ignored and when I see Christians tolerate the sin in their lives. I feel called to speak out against these things.",
+  "In my church I tend to be among the first to get involved in projects that require manual labor or me serving others.",
+  "I have a special place in my heart for the poor and needy and I do everything I can to minister to them and help them.",
+  "I can organize and classify the Bible's teachings in a way that helps people learn more effectively.",
+  "I pray in tongues regularly during my quiet times with the Lord. I do not just pray in tongues when I am around others who are doing so.",
+  "I can easily predict the end result of personal decisions that others make before they can.",
+  "God has given me abilities that relate to worship such as singing, dancing, playing an instrument, or writing music.",
+  "I can see the \"big picture\" of a complex task and can easily create a strategy that will best accomplish that task.",
+  "God has displayed miraculous signs and wonders through me and throughout my ministry.",
+  "I actively look for ways to make my church more physically attractive. A church should look impressive and have a distinct \"spiritual décor\" to it.",
+  "I think that most of the problems in the church and in individual Christians could be solved if we were more aware of how evil spiritual forces gain entry into our lives.",
+  "I have actually seen or strongly sensed the presence of angels and/or demons.",
+  "I am often burdened for the salvation of specific people and I begin to pray and intercede on their behalf, asking God to save their souls.",
+  "I offer solutions or issue spiritual challenges to other Christians in a way that motivates them to act.",
+  "Others have told me that I strengthened their faith during a time of crisis or trouble.",
+  "I don't have a hard time giving money away when the Lord prompts me to do so.",
+  "God has specifically directed me to pray for someone with a sickness or physical condition and after I prayed there was a noticeable improvement in their condition.",
+  "I don't mind being behind the scenes and helping out with the routine or mundane tasks as long as I know I'm really helping someone in their ministry.",
+  "I enjoy using my home as a ministry base where I can minister to those whom God brings across my path.",
+  "God gives me revelation and insight into the spiritual world so that I can pray accurately and strategically about the concerns that He lays on my heart.",
+  "The Lord uses me to interpret the spiritual dreams of others.",
+  "When someone gives a message in tongues in a public church service, I want God to give me the interpretation of that message so the congregation will be blessed and in awe of God.",
+  "The Lord has bypassed my intellectual knowledge of a spiritual issue and has used me to speak a message about it that came straight from Him.",
+  "God has used me to rally other Christians around a common goal, and I have successfully guided the group to complete that goal.",
+  "I have endured physical abuse and injury because of my stand for Christ. When this occurred, I considered it an honor to suffer for the sake of the gospel.",
+  "I minister to people who are neglected, broken, and often overlooked by others.",
+  "In a time of great need God has used me to perform a miracle that was an answer to everyone's prayers.",
+  "I would be willing to relocate, learn a foreign language, and give up many of my present comforts if I could help reach an unreached nation or people group with the gospel.",
+  "I have been used of God to impart new vision in others and to help develop new ministry skills.",
+  "The Lord has given me an inspired message and directed me to deliver it to someone for their edification.",
+  "I have become aware that God uses me to speak into the lives of others for their edification. I have been used at times to warn, instruct, confirm, or encourage others in their walk with God.",
+  "I don't mind doing menial tasks if I feel it will really bless someone.",
+  "I feel God has called me to invest my life in the less fortunate of society and to show them the love of Jesus.",
+  "I have a high regard for the Word of God. It disturbs me when people teach false doctrine and use Scripture out of context.",
+  "When I am ministering or praying for people, God will often give me insight into what needs to be prayed or said to them after I have first prayed for them in tongues.",
+  "I have warned others about certain people or situations that may not be God's will for them. My counsel has proved helpful and saved them from the pain of making a mistake.",
+  "I can perceive what God wants to do in a worship service and can exhort and prepare people to receive from Him."
+];
+
+// ─────────────────────────────────────────────
+// SCORING MAP
+// Replace null values with actual question indices (0-based) once the key is confirmed.
+// Each gift must have exactly 5 question indices.
+// Format: [q_index, q_index, q_index, q_index, q_index]
+// ─────────────────────────────────────────────
+const GIFTS = [
+  { name: "Administration",            scripture: "1 Corinthians 12:28",    definition: "The unique, God-given ability to administrate and organize people and resources in order to achieve maximum efficiency in the work of the kingdom.", questions: [0, 30, 60, 90, 120] },
+  { name: "Apostleship",               scripture: "Ephesians 4:11",         definition: "The unique, God-given ability to exercise strategic leadership and spiritual authority over large segments of the body of Christ.", questions: [1, 31, 61, 91, 121] },
+  { name: "Craftsmanship",             scripture: "Exodus 31:3–5",          definition: "The unique, God-given ability to work skillfully and creatively to design, build, or create things that are useful and inspirational in the work of the kingdom.", questions: [2, 32, 62, 92, 122] },
+  { name: "Deliverance",               scripture: "Mark 16:17",             definition: "The unique, God-given ability to perceive and confront demonic forces and to bring freedom to those trapped in demonic bondage.", questions: [3, 33, 63, 93, 123] },
+  { name: "Discernment",               scripture: "1 Corinthians 12:10",    definition: "The unique, God-given ability to detect whether the actions and intentions of others are from a heavenly, a human, or a demonic influence.", questions: [4, 34, 64, 94, 124] },
+  { name: "Evangelism",                scripture: "Ephesians 4:11",         definition: "The unique, God-given ability to cause others to be aware of their need for Christ and to present the gospel in such a way that others believe and accept it.", questions: [5, 35, 65, 95, 125] },
+  { name: "Exhortation",               scripture: "Romans 12:8",            definition: "The unique, God-given ability to encourage, strengthen, and admonish others for the purpose of helping them reach their God-given potential.", questions: [6, 36, 66, 96, 126] },
+  { name: "Faith",                     scripture: "1 Corinthians 12:9",     definition: "The unique, God-given ability to discern God's will for a particular matter and to fervently pray and work toward accomplishing that end while inspiring others.", questions: [7, 37, 67, 97, 127] },
+  { name: "Giving",                    scripture: "Romans 12:8",            definition: "The unique, God-given ability to give unselfishly of one's resources to ensure that the work of the church and the needs of others are taken care of.", questions: [8, 38, 68, 98, 128] },
+  { name: "Healing",                   scripture: "1 Corinthians 12:9",     definition: "The unique, God-given ability to cure and restore those who suffer from physical and/or emotional ailments.", questions: [9, 39, 69, 99, 129] },
+  { name: "Helps",                     scripture: "1 Corinthians 12:28",    definition: "The unique, God-given ability to partner and come alongside others for the purpose of greatly increasing the other person's ministry effectiveness.", questions: [10, 40, 70, 100, 130] },
+  { name: "Hospitality",               scripture: "1 Peter 4:9–10",         definition: "The unique, God-given ability to open one's home to others and to create such an environment of warmth and acceptance that genuine ministry occurs.", questions: [11, 41, 71, 101, 131] },
+  { name: "Intercession",              scripture: "Luke 2:37",              definition: "The unique, God-given ability to perceive the heart of God for nations, individuals, or specific situations and to pray fervently and strategically until God's will comes to pass.", questions: [12, 42, 72, 102, 132] },
+  { name: "Interpretation of Dreams",  scripture: "Daniel 1:17",            definition: "The unique, God-given ability to decode the symbolism and explain the meaning of dreams and/or visions that others receive from God.", questions: [13, 43, 73, 103, 133] },
+  { name: "Interpretation of Tongues", scripture: "1 Corinthians 12:10",   definition: "The unique, God-given ability to interpret and translate a message in tongues into an understandable language that others can receive and benefit from.", questions: [14, 44, 74, 104, 134] },
+  { name: "Knowledge",                 scripture: "1 Corinthians 12:8",     definition: "The unique, God-given ability to perceive the truths of God and the mysteries of the faith and to share these insights for the edification of the church.", questions: [15, 45, 75, 105, 135] },
+  { name: "Leadership",                scripture: "Romans 12:8",            definition: "The unique, God-given ability to perceive God's ideals for a matter and to then organize, inspire, and lead others in the completion of that endeavor.", questions: [16, 46, 76, 106, 136] },
+  { name: "Martyrdom",                 scripture: "John 21:18–19",          definition: "The unique, God-given ability to endure suffering and persecution for the cause of Christ and yet maintain a spirit of joy and thankfulness.", questions: [17, 47, 77, 107, 137] },
+  { name: "Mercy",                     scripture: "Romans 12:8",            definition: "The unique, God-given ability to comfort and restore others who are experiencing a physical, spiritual, or emotional hardship.", questions: [18, 48, 78, 108, 138] },
+  { name: "Miracles",                  scripture: "1 Corinthians 12:10",    definition: "The unique, God-given ability to perform supernatural acts which supersede natural law for the purpose of causing others to recognize the power and glory of God.", questions: [19, 49, 79, 109, 139] },
+  { name: "Missionary",                scripture: "Acts 13:1–5",            definition: "The unique, God-given ability to effectively minister in a foreign culture for the purposes of establishing and/or strengthening the church within that cultural group.", questions: [20, 50, 80, 110, 140] },
+  { name: "Pastoring",                 scripture: "Ephesians 4:11",         definition: "The unique, God-given ability to nurture, protect, and to help bring to maturity, a group of Christians.", questions: [21, 51, 81, 111, 141] },
+  { name: "Prophecy",                  scripture: "1 Corinthians 12:10",    definition: "The unique, God-given ability to receive an inspired message from God that is then shared with others to bring encouragement, edification, or correction.", questions: [22, 52, 82, 112, 142] },
+  { name: "Prophet",                   scripture: "Ephesians 4:11",         definition: "The unique, God-given ability to receive special revelations from God and to serve as a messenger, delivering those communications to those whom God directs.", questions: [23, 53, 83, 113, 143] },
+  { name: "Serving",                   scripture: "Romans 12:7",            definition: "The unique, God-given ability to be aware of the physical and practical needs of others and to meet those needs in a way that blesses them.", questions: [24, 54, 84, 114, 144] },
+  { name: "Simplicity",                scripture: "1 Corinthians 13:3",     definition: "The unique, God-given ability to voluntarily divest oneself of most material comforts so as to simplify one's lifestyle for more effective ministry.", questions: [25, 55, 85, 115, 145] },
+  { name: "Teaching",                  scripture: "Ephesians 4:11",         definition: "The unique, God-given ability to discover God's truths and to communicate them in such a way that others can understand them and grow spiritually.", questions: [26, 56, 86, 116, 146] },
+  { name: "Tongues",                   scripture: "1 Corinthians 12:10",    definition: "The unique, God-given ability to communicate with God in a special, heavenly language for the purpose of praise, intercession, and spiritual edification.", questions: [27, 57, 87, 117, 147] },
+  { name: "Wisdom",                    scripture: "1 Corinthians 12:8",     definition: "The unique, God-given ability to discover principles and precepts in the Word of God and to accurately apply them to everyday living.", questions: [28, 58, 88, 118, 148] },
+  { name: "Worship",                   scripture: "1 Corinthians 14:15",    definition: "The unique, God-given ability to usher in the presence of God during a time of worship for the purpose of drawing others into an intimate encounter with God.", questions: [29, 59, 89, 119, 149] },
+];
+
+// ─────────────────────────────────────────────
+// GOOGLE FORM URL — replace with your actual pre-fill base URL
+// Parameters will be appended automatically from the results.
+// ─────────────────────────────────────────────
+const GOOGLE_FORM_PREFILL_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSe2C8yDoWAs8zFmJ5Gmf19Ao8NxC_MfD2UYfU1ebkm9Oivr4A/viewform";
+const FORM_FIELD_NAME   = "entry.1662269536";
+const FORM_FIELD_EMAIL  = "entry.55991052";
+const FORM_FIELD_SCORES = "entry.557099838";
+
+// ─────────────────────────────────────────────
+// BUILD QUESTIONS
+// ─────────────────────────────────────────────
+const LABELS = ["Never","Rarely","Sometimes","Usually","Almost always"];
+
+function buildQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  QUESTIONS.forEach((text, i) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.id = 'qb-' + i;
+
+    const numEl = document.createElement('div');
+    numEl.className = 'q-num';
+    numEl.textContent = i + 1;
+
+    const body = document.createElement('div');
+    body.className = 'q-body';
+
+    const qText = document.createElement('p');
+    qText.className = 'q-text';
+    qText.textContent = text;
+
+    const opts = document.createElement('div');
+    opts.className = 'q-options';
+
+    for (let v = 0; v <= 4; v++) {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'q' + i;
+      input.value = v;
+      input.addEventListener('change', onAnswer);
+
+      const pip = document.createElement('span');
+      pip.className = 'pip';
+      pip.textContent = v;
+
+      const lbl = document.createElement('span');
+      lbl.className = 'pip-label';
+      lbl.textContent = LABELS[v];
+
+      label.appendChild(input);
+      label.appendChild(pip);
+      label.appendChild(lbl);
+      opts.appendChild(label);
+    }
+
+    body.appendChild(qText);
+    body.appendChild(opts);
+    block.appendChild(numEl);
+    block.appendChild(body);
+    wrap.appendChild(block);
+  });
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS
+// ─────────────────────────────────────────────
+function onAnswer(e) {
+  const qIndex = parseInt(e.target.name.replace('q',''));
+  document.getElementById('qb-' + qIndex).classList.add('answered');
+  updateProgress();
+}
+
+function updateProgress() {
+  let answered = 0;
+  for (let i = 0; i < 150; i++) {
+    if (document.querySelector('input[name="q' + i + '"]:checked')) answered++;
+  }
+  const pct = Math.round((answered / 150) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = answered + ' / 150';
+  return answered;
+}
+
+// ─────────────────────────────────────────────
+// SCORE
+// ─────────────────────────────────────────────
+function getAnswers() {
+  const answers = [];
+  for (let i = 0; i < 150; i++) {
+    const checked = document.querySelector('input[name="q' + i + '"]:checked');
+    answers.push(checked ? parseInt(checked.value) : null);
+  }
+  return answers;
+}
+
+function scoreGifts(answers) {
+  return GIFTS.map(gift => {
+    if (!gift.questions) {
+      // Scoring key not yet loaded — return 0
+      return { ...gift, score: 0 };
+    }
+    const score = gift.questions.reduce((sum, qi) => sum + (answers[qi] || 0), 0);
+    return { ...gift, score };
+  });
+}
+
+// ─────────────────────────────────────────────
+// SUBMIT
+// ─────────────────────────────────────────────
+function submitAssessment() {
+  const answers = getAnswers();
+  const unanswered = answers.filter(a => a === null).length;
+
+  if (unanswered > 0) {
+    const warn = document.getElementById('unanswered-warning');
+    warn.textContent = unanswered + ' question' + (unanswered > 1 ? 's' : '') + ' still unanswered. Please complete all 150 before scoring.';
+    warn.style.display = 'block';
+    // Scroll to first unanswered
+    const firstNull = answers.indexOf(null);
+    document.getElementById('qb-' + firstNull).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const scored = scoreGifts(answers);
+  const sorted = [...scored].sort((a, b) => b.score - a.score);
+  const maxScore = 20;
+
+  // Hide form, show results
+  document.getElementById('assessment-form').style.display = 'none';
+  document.getElementById('progress-bar-wrap').style.display = 'none';
+  const resultsEl = document.getElementById('results-section');
+  resultsEl.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Top gifts — include all ties within positions 1, 2, and 3
+  const topWrap = document.getElementById('top-gifts');
+  topWrap.innerHTML = '<h3>Your top gifts</h3>';
+
+  // Determine which scores occupy the top 3 distinct positions
+  const distinctScores = [...new Set(sorted.map(g => g.score))].slice(0, 3);
+  const topGifts = sorted.filter(g => distinctScores.includes(g.score));
+
+  // Assign display rank labels accounting for ties
+  let displayRank = 1;
+  let lastScore = null;
+  let countAtRank = 0;
+  topGifts.forEach((g) => {
+    if (g.score !== lastScore) {
+      displayRank = displayRank + countAtRank;
+      countAtRank = 1;
+      lastScore = g.score;
+    } else {
+      countAtRank++;
+    }
+    const card = document.createElement('div');
+    card.className = 'top-gift-card';
+    card.innerHTML = `
+      <h4>${displayRank}. ${g.name}</h4>
+      <span class="score-badge">Score: ${g.score} / 20</span>
+      <p>${g.definition}</p>
+      <p class="scripture">${g.scripture}</p>
+    `;
+    topWrap.appendChild(card);
+  });
+
+  // Full rankings
+  const rankWrap = document.getElementById('full-rankings');
+  rankWrap.innerHTML = '<div style="margin-top:3rem;"><h3 style="font-family:var(--serif);font-size:1.4rem;font-weight:500;margin-bottom:1.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule);">All 30 gifts ranked</h3></div>';
+  sorted.forEach((g, i) => {
+    const row = document.createElement('div');
+    row.className = 'gift-row';
+    row.innerHTML = `
+      <span class="gift-rank">${i + 1}</span>
+      <span class="gift-name">${g.name}</span>
+      <div class="gift-bar-wrap"><div class="gift-bar" style="width:0%" data-pct="${Math.round((g.score/maxScore)*100)}"></div></div>
+      <span class="gift-score">${g.score}</span>
+    `;
+    rankWrap.querySelector('div').appendChild(row);
+  });
+
+  // Animate bars after paint
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.gift-bar').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    });
+  });
+
+  // Store sorted results for email handoff
+  window._scoredGifts = sorted;
+  window._rawAnswers = answers;
+}
+
+// ─────────────────────────────────────────────
+// EMAIL HANDOFF — pre-fill Google Form
+// ─────────────────────────────────────────────
+function sendResults() {
+  const name  = document.getElementById('result-name').value.trim();
+  const email = document.getElementById('result-email').value.trim();
+
+  if (!name || !email) {
+    alert('Please enter your name and email address.');
+    return;
+  }
+
+  const sorted = window._scoredGifts || [];
+
+  // Build a compact score summary string: "Exhortation:18, Teaching:17, ..."
+  const scoreSummary = sorted
+    .map(g => g.name + ':' + g.score)
+    .join(', ');
+
+  const top3 = sorted.slice(0, 3).map(g => g.name).join(', ');
+  const fullSummary = 'Top gifts: ' + top3 + ' | All scores: ' + scoreSummary;
+
+  const url = new URL(GOOGLE_FORM_PREFILL_BASE);
+  url.searchParams.set(FORM_FIELD_NAME,   name);
+  url.searchParams.set(FORM_FIELD_EMAIL,  email);
+  url.searchParams.set(FORM_FIELD_SCORES, fullSummary);
+
+  document.getElementById('form-url-note').textContent =
+    'Opening the submission form — review and click Submit to receive your results by email.';
+
+  window.open(url.toString(), '_blank');
+}
+
+// ─────────────────────────────────────────────
+// RESTART
+// ─────────────────────────────────────────────
+function restartAssessment() {
+  if (!confirm('This will clear all your answers. Are you sure?')) return;
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.question-block').forEach(b => b.classList.remove('answered'));
+  document.getElementById('assessment-form').style.display = 'block';
+  document.getElementById('progress-bar-wrap').style.display = 'flex';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('progress-label').textContent = '0 / 150';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+buildQuestions();
+
+// ─────────────────────────────────────────────
+// TEST HELPER — auto-fill all questions randomly
+// Remove or comment out before deploying
+// ─────────────────────────────────────────────
+function autoFill() {
+  for (let i = 0; i < 150; i++) {
+    const val = Math.floor(Math.random() * 5); // 0–4
+    const radio = document.querySelector('input[name="q' + i + '"][value="' + val + '"]');
+    if (radio) {
+      radio.checked = true;
+      radio.dispatchEvent(new Event('change'));
+    }
+  }
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+// Inject a visible test button into the page
+(function() {
+  const btn = document.createElement('button');
+  btn.textContent = '⚡ Auto-fill for testing';
+  btn.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:#b8935a;color:white;border:none;padding:0.6rem 1.2rem;border-radius:2px;font-size:0.8rem;font-weight:500;cursor:pointer;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+  btn.onclick = autoFill;
+  document.body.appendChild(btn);
+})();
+</script>
+</body>
+</html>
